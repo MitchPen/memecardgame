@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace Game.Core.AssetsProvider.ContentLoaders.TextureLoader
 {
-    public class LocalWebRequestTextureLoader : BaseLocalContentProvider<TextureLoaderResult>
+    public class LocalWebRequestTextureLoader : BaseLocalContentLoader<TextureLoaderResult>
     {
         private const string PNG_EXTENSION = ".png";
         private const string JPG_EXTENSION = ".jpg";

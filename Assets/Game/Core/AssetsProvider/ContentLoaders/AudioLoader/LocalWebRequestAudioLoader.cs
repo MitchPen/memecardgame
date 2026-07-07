@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace Game.Core.AssetsProvider.ContentLoaders.AudioLoader
 {
-    public class LocalWebRequestAudioLoader : BaseLocalContentProvider<AudioLoaderResult>
+    public class LocalWebRequestAudioLoader : BaseLocalContentLoader<AudioLoaderResult>
     {
         private const string WAV_EXTENSION = ".wav";
         private const string MP3_EXTENSION = ".mp3";

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Core.AssetsProvider.ContentLoaders
 {
-    public abstract class BaseLocalContentProvider<T> : IContentLoader<T> where T : ContentLoaderResult
+    public abstract class BaseLocalContentLoader<T> : IContentLoader<T> where T : ContentLoaderResult
     {
         public async virtual UniTask<T> LoadContent(string link)
         {
