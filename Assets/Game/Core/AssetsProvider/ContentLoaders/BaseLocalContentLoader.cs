@@ -14,7 +14,7 @@ namespace Game.Core.AssetsProvider.ContentLoaders
 
         protected bool ValidatePath(string filePath, string[] allowedTypes, out string resultPath)
         {
-            resultPath = "file://" + filePath.Replace("\\", "/");
+            resultPath = filePath;
             if (resultPath.Contains(".."))
             {
                 Debug.LogWarning("Relative path not supported: ..");
@@ -30,6 +30,11 @@ namespace Game.Core.AssetsProvider.ContentLoaders
             }
 
             return true;
+        }
+
+        protected string ConvertToFileRequest(string path)
+        {
+            return "file://" + path.Replace("\\", "/");
         }
     }
 }

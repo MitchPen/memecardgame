@@ -36,7 +36,7 @@ namespace Game.Core.AssetsProvider
 
         private async UniTaskVoid LoadImage()
         {
-            IContentLoader<TextureLoaderResult> reader = new LocalWebRequestTextureLoader();
+            IContentLoader<TextureLoaderResult> reader = new ByteTextureLoader();
             var readerResult = await reader.LoadContent(_imagePath);
             if (readerResult.Result)
             {

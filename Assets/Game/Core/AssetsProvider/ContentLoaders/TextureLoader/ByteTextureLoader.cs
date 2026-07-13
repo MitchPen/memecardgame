@@ -1,53 +1,48 @@
-using System;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Game.Core.AssetsProvider.ContentLoaders.TextureLoader
 {
-    public class LocalWebRequestTextureLoader : BaseLocalContentLoader<TextureLoaderResult>
+    public class ByteTextureLoader: BaseLocalContentLoader<TextureLoaderResult>
     {
         private const string PNG_EXTENSION = ".png";
         private const string JPG_EXTENSION = ".jpg";
         private const string JPEG_EXTENSION = ".jpeg";
         private string[] _allowedType = { PNG_EXTENSION, JPG_EXTENSION, JPEG_EXTENSION };
-
+        
         public override async UniTask<TextureLoaderResult> LoadContent(string link)
         {
-            if (!ValidatePath(ConvertToFileRequest(link),_allowedType, out string url))
+            if (!ValidatePath(link, _allowedType, out _ ))
                 return ReturnFailure();
 
-            using UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-            
-            try
+            if (File.Exists(link))
             {
-                await request.SendWebRequest();
-                
-                if (request.result == UnityWebRequest.Result.Success)
+                byte[] fileBytes =await File.ReadAllBytesAsync(link);
+                Texture2D newTexture = new Texture2D(2, 2);
+                bool success = newTexture.LoadImage(fileBytes, false);
+                if (success)
                 {
-                    var texture = DownloadHandlerTexture.GetContent(request);
-                    texture.name = Path.GetFileName(url);
-                    if (texture.width <= 0 || texture.height <= 0)
+                    if (newTexture.width <= 0 || newTexture.height <= 0)
                         return ReturnFailure(": Wrong image resolution");
-
+                    
                     return new TextureLoaderResult()
                     {
                         Result = true,
-                        Texture = texture,
+                        Texture = newTexture,
                     };
                 }
             }
-            catch (Exception e)
-            {
-                Debug.LogError($"{nameof(LocalWebRequestTextureLoader)} request failed: {e.Message} _:" + request.error);
-            }
+            else
+                Debug.LogError($"{nameof(ByteTextureLoader)}: File not exist ");
+            
+            Debug.LogError($"{nameof(ByteTextureLoader)}: Failed to read file");
             
             return ReturnFailure();
             
             TextureLoaderResult ReturnFailure(string additionalInfo = "")
             {
-                Debug.LogError($"{nameof(LocalWebRequestTextureLoader)}: Load image failed"+additionalInfo);
+                Debug.LogError($"{nameof(ByteTextureLoader)}: Load image failed"+ additionalInfo);
                 return new TextureLoaderResult()
                 {
                     Result = false,
